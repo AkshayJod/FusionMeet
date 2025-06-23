@@ -1,0 +1,17 @@
+# Background Images Folder
+
+This folder contains background images for the virtual background feature.
+
+Default backgrounds should be placed here:
+- office.jpg (Modern office background)
+- home.jpg (Cozy home background) 
+- nature.jpg (Nature view background)
+- abstract.jpg (Abstract background)
+
+For now, the system will use placeholder images if these files are not found.
+
+Image requirements:
+- Format: JPG, PNG, or WebP
+- Resolution: 1920x1080 recommended
+- File size: Under 2MB for optimal performance
+- Aspect ratio: 16:9 preferred

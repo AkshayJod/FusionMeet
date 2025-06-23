@@ -1,9 +1,10 @@
 import { Server } from "socket.io"
-
+import { createSystemNotification } from "./notification.controller.js";
 
 let connections = {}
 let messages = {}
 let timeOnline = {}
+let userSockets = {} // Map userId to socketId for notifications
 
 export const connectToSocket = (server) => {
     const io = new Server(server, {
@@ -19,6 +20,15 @@ export const connectToSocket = (server) => {
     io.on("connection", (socket) => {
 
         console.log("SOMETHING CONNECTED")
+
+        // Handle user authentication for notifications
+        socket.on("authenticate-user", (userId) => {
+            if (userId) {
+                userSockets[userId] = socket.id;
+                socket.join(`user_${userId}`);
+                console.log(`User ${userId} authenticated for notifications`);
+            }
+        });
 
         socket.on("join-call", (path) => {
 
@@ -79,9 +89,36 @@ export const connectToSocket = (server) => {
 
         })
 
+        // Handle notification events
+        socket.on("send-notification", async (data) => {
+            const { targetUserId, type, title, message, notificationData } = data;
+
+            // Send real-time notification
+            io.to(`user_${targetUserId}`).emit('new-notification', {
+                type,
+                title,
+                message,
+                data: notificationData,
+                timestamp: new Date()
+            });
+
+            // Create system notification in database
+            if (targetUserId) {
+                await createSystemNotification(targetUserId, type, title, message, notificationData);
+            }
+        });
+
         socket.on("disconnect", () => {
 
             var diffTime = Math.abs(timeOnline[socket.id] - new Date())
+
+            // Remove user from notification mapping
+            for (const [userId, socketId] of Object.entries(userSockets)) {
+                if (socketId === socket.id) {
+                    delete userSockets[userId];
+                    break;
+                }
+            }
 
             var key
 

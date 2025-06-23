@@ -1,0 +1,344 @@
+/* Modern Animations for FusionMeet - Batman Theme */
+
+/* Import Inter font for modern typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* === ENTRANCE ANIMATIONS === */
+
+/* Fade in with scale */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Slide in from bottom */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Bounce in */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* === GLOW ANIMATIONS === */
+
+/* Cyber glow pulse */
+@keyframes cyberGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 5px rgba(0, 212, 255, 0.5),
+      0 0 10px rgba(0, 212, 255, 0.3),
+      0 0 15px rgba(0, 212, 255, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(0, 212, 255, 0.8),
+      0 0 20px rgba(0, 212, 255, 0.5),
+      0 0 30px rgba(0, 212, 255, 0.3);
+  }
+}
+
+/* Gold glow pulse */
+@keyframes goldGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 5px rgba(255, 215, 0, 0.5),
+      0 0 10px rgba(255, 215, 0, 0.3),
+      0 0 15px rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(255, 215, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.5),
+      0 0 30px rgba(255, 215, 0, 0.3);
+  }
+}
+
+/* Text glow */
+@keyframes textGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 5px rgba(0, 212, 255, 0.5),
+      0 0 10px rgba(0, 212, 255, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 10px rgba(0, 212, 255, 0.8),
+      0 0 20px rgba(0, 212, 255, 0.5),
+      0 0 30px rgba(0, 212, 255, 0.3);
+  }
+}
+
+/* === HOVER ANIMATIONS === */
+
+/* Hover lift */
+@keyframes hoverLift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+/* Hover scale */
+@keyframes hoverScale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+/* === LOADING ANIMATIONS === */
+
+/* Spinner */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pulse */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+/* Recording pulse */
+@keyframes recordingPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    background-color: #FF4444;
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+    background-color: #FF6666;
+  }
+}
+
+/* === BACKGROUND ANIMATIONS === */
+
+/* Gradient shift */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* === UTILITY CLASSES === */
+
+/* Entrance Animations */
+.animate-fade-in-scale {
+  animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Glow Effects */
+.glow-cyber {
+  animation: cyberGlow 2s ease-in-out infinite;
+}
+
+.glow-gold {
+  animation: goldGlow 2s ease-in-out infinite;
+}
+
+.glow-text {
+  animation: textGlow 2s ease-in-out infinite;
+}
+
+/* Hover Effects */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 8px 25px rgba(0, 212, 255, 0.4);
+}
+
+.hover-scale {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-glow:hover {
+  box-shadow:
+    0 0 20px rgba(0, 212, 255, 0.6),
+    0 0 40px rgba(0, 212, 255, 0.4),
+    0 0 60px rgba(0, 212, 255, 0.2);
+}
+
+/* Loading States */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-recording {
+  animation: recordingPulse 1.5s ease-in-out infinite;
+}
+
+/* Background Effects */
+.gradient-shift {
+  background: linear-gradient(-45deg, #0A0A0A, #1A1A1A, #2A2A2A, #1A1A1A);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* === STAGGER ANIMATIONS === */
+.stagger-children > * {
+  opacity: 0;
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* === GLASS MORPHISM === */
+.glass-morphism {
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 16px;
+}
+
+.glass-morphism-light {
+  background: rgba(42, 42, 42, 0.6);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+}
+
+/* === CYBER GRID === */
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* === RESPONSIVE ANIMATIONS === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

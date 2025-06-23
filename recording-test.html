@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recording Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .recording {
+            background-color: #f44336;
+            color: white;
+        }
+        .paused {
+            background-color: #ff9800;
+            color: white;
+        }
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            background: #000;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+        .success {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+        .info {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <h1>FusionMeet Recording Test</h1>
+    
+    <div id="status" class="status info">
+        Click "Start Test" to begin recording test
+    </div>
+
+    <video id="preview" autoplay muted playsinline></video>
+    
+    <div class="controls">
+        <button id="startTest">Start Test</button>
+        <button id="startRecord" disabled>Start Recording</button>
+        <button id="pauseRecord" disabled>Pause</button>
+        <button id="stopRecord" disabled>Stop Recording</button>
+        <button id="download" disabled>Download</button>
+    </div>
+
+    <div id="duration" style="font-size: 18px; font-weight: bold;"></div>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let stream;
+        let isRecording = false;
+        let isPaused = false;
+        let startTime;
+        let timer;
+
+        const statusDiv = document.getElementById('status');
+        const preview = document.getElementById('preview');
+        const startTestBtn = document.getElementById('startTest');
+        const startRecordBtn = document.getElementById('startRecord');
+        const pauseRecordBtn = document.getElementById('pauseRecord');
+        const stopRecordBtn = document.getElementById('stopRecord');
+        const downloadBtn = document.getElementById('download');
+        const durationDiv = document.getElementById('duration');
+
+        function updateStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function updateDuration() {
+            if (isRecording && !isPaused) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                durationDiv.textContent = `Recording: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        async function startTest() {
+            try {
+                updateStatus('Requesting camera access...', 'info');
+                
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 1280, height: 720 },
+                    audio: true
+                });
+                
+                preview.srcObject = stream;
+                updateStatus('Camera access granted! Ready to record.', 'success');
+                
+                startTestBtn.disabled = true;
+                startRecordBtn.disabled = false;
+                
+            } catch (error) {
+                updateStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function startRecording() {
+            try {
+                if (!MediaRecorder) {
+                    throw new Error('MediaRecorder not supported');
+                }
+
+                recordedChunks = [];
+                
+                const options = {
+                    mimeType: 'video/webm;codecs=vp9,opus'
+                };
+
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    options.mimeType = 'video/webm';
+                }
+
+                mediaRecorder = new MediaRecorder(stream, options);
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data && event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, {
+                        type: mediaRecorder.mimeType
+                    });
+                    
+                    const url = URL.createObjectURL(blob);
+                    downloadBtn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `recording-${Date.now()}.webm`;
+                        a.click();
+                    };
+                    
+                    downloadBtn.disabled = false;
+                    updateStatus(`Recording complete! File size: ${(blob.size / 1024 / 1024).toFixed(2)} MB`, 'success');
+                };
+
+                mediaRecorder.onerror = (event) => {
+                    updateStatus(`Recording error: ${event.error}`, 'error');
+                };
+
+                mediaRecorder.start(1000);
+                isRecording = true;
+                isPaused = false;
+                startTime = Date.now();
+                
+                timer = setInterval(updateDuration, 1000);
+                
+                startRecordBtn.disabled = true;
+                pauseRecordBtn.disabled = false;
+                stopRecordBtn.disabled = false;
+                
+                updateStatus('Recording started!', 'success');
+                
+            } catch (error) {
+                updateStatus(`Failed to start recording: ${error.message}`, 'error');
+            }
+        }
+
+        function pauseRecording() {
+            if (!mediaRecorder || !isRecording) return;
+
+            if (isPaused) {
+                mediaRecorder.resume();
+                isPaused = false;
+                pauseRecordBtn.textContent = 'Pause';
+                updateStatus('Recording resumed', 'success');
+            } else {
+                mediaRecorder.pause();
+                isPaused = true;
+                pauseRecordBtn.textContent = 'Resume';
+                updateStatus('Recording paused', 'info');
+            }
+        }
+
+        function stopRecording() {
+            if (!isRecording) return;
+
+            mediaRecorder.stop();
+            isRecording = false;
+            isPaused = false;
+            
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+            
+            durationDiv.textContent = '';
+            
+            startRecordBtn.disabled = false;
+            pauseRecordBtn.disabled = true;
+            stopRecordBtn.disabled = true;
+            pauseRecordBtn.textContent = 'Pause';
+        }
+
+        // Event listeners
+        startTestBtn.addEventListener('click', startTest);
+        startRecordBtn.addEventListener('click', startRecording);
+        pauseRecordBtn.addEventListener('click', pauseRecording);
+        stopRecordBtn.addEventListener('click', stopRecording);
+
+        // Check browser support
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            updateStatus('Camera not supported in this browser', 'error');
+            startTestBtn.disabled = true;
+        } else if (!window.MediaRecorder) {
+            updateStatus('Recording not supported in this browser', 'error');
+            startTestBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>

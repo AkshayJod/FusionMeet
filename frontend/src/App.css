@@ -1,10 +1,8 @@
 .landingPageContainer {
   width: 100vw;
   height: 100vh;
-  background: url("/public/background.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: white;
+  background: #f5f5f5;
+  color: #333;
 }
 
 .landingPageContainer nav {
@@ -41,10 +39,10 @@
 }
 
 .landingMainContainer>div:nth-child(1) div[role='button'] {
-  background: #D97500;
+  background: #1976d2;
   width: fit-content;
   padding: 1rem;
-  border-radius: 20px;
+  border-radius: 8px;
   margin-top: 1.9rem;
 }
 
@@ -93,4 +91,11 @@
   width: 30vw;
   height: auto;
   border-radius: 20px;
+}
+
+/* Recording pulse animation */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
